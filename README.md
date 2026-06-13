@@ -161,7 +161,14 @@ is set.
 every push/PR and **deploys to S3 on push to `main`**. It authenticates to AWS
 with **OIDC** (a short-lived assumed role — no long-lived keys in the repo).
 
-**One-time AWS setup:**
+> 🚀 **Easiest path: use the Terraform module.**
+> [`infra/terraform/`](infra/terraform/README.md) provisions the whole stack
+> (private S3 + CloudFront HTTPS + the OIDC deploy role) in one `terraform apply`
+> and prints exactly what to paste into GitHub. Its README is written for AWS
+> beginners. The manual steps below are only if you'd rather click through the
+> console.
+
+**One-time AWS setup (manual alternative):**
 
 1. Add GitHub as an OIDC identity provider in IAM:
    - Provider URL: `https://token.actions.githubusercontent.com`
