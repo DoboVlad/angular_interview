@@ -104,7 +104,21 @@ terraform apply -var="aws_region=eu-west-1"
 ```
 
 (Available variables: `aws_region`, `bucket_prefix`, `github_repo`,
-`create_oidc_provider` — see [variables.tf](variables.tf).)
+`create_oidc_provider`, `budget_alert_email`, `monthly_budget_usd` — see
+[variables.tf](variables.tf).)
+
+### Recommended: turn on the billing alarm
+
+Pass your email to get a free monthly spend alarm (emails you at 80% of the
+threshold and if forecast spend will exceed 100% — default $5/mo):
+
+```powershell
+terraform apply -var="budget_alert_email=you@example.com"
+```
+
+AWS sends a one-time confirmation to that address — click it to activate alerts.
+AWS Budgets is free for the first two budgets, so this costs nothing. Leave the
+variable unset and no budget is created.
 
 ## Step 6 — Put the outputs into GitHub
 
@@ -154,8 +168,8 @@ For a personal project this lands in or near the **free tier**:
   perpetual free tier; you won't approach that.
 - **IAM / OIDC**: free.
 
-Realistically **$0–1/month**. Set a billing alarm (AWS Console → Billing →
-Budgets) if you want peace of mind.
+Realistically **$0–1/month**. For peace of mind, enable the built-in billing
+alarm by passing `budget_alert_email` (see Step 5).
 
 ## Updating the site later
 

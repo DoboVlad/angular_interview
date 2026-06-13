@@ -214,3 +214,37 @@ resource "aws_iam_role_policy" "deploy" {
   role   = aws_iam_role.deploy.id
   policy = data.aws_iam_policy_document.deploy_permissions.json
 }
+
+# ---------------------------------------------------------------------------
+# Billing safety net (opt-in)
+#
+# Created only when budget_alert_email is set. Emails you at 80% of the monthly
+# threshold (actual spend) and again if forecast spend will exceed 100%.
+# AWS Budgets is free for the first two budgets per account.
+# ---------------------------------------------------------------------------
+resource "aws_budgets_budget" "monthly" {
+  count        = var.budget_alert_email != "" ? 1 : 0
+  name         = "${var.bucket_prefix}-monthly"
+  budget_type  = "COST"
+  limit_amount = tostring(var.monthly_budget_usd)
+  limit_unit   = "USD"
+  time_unit    = "MONTHLY"
+
+  # Notify when actual spend passes 80% of the threshold.
+  notification {
+    comparison_operator        = "GREATER_THAN"
+    threshold                  = 80
+    threshold_type             = "PERCENTAGE"
+    notification_type          = "ACTUAL"
+    subscriber_email_addresses = [var.budget_alert_email]
+  }
+
+  # Notify when forecast spend is projected to exceed the threshold.
+  notification {
+    comparison_operator        = "GREATER_THAN"
+    threshold                  = 100
+    threshold_type             = "PERCENTAGE"
+    notification_type          = "FORECASTED"
+    subscriber_email_addresses = [var.budget_alert_email]
+  }
+}

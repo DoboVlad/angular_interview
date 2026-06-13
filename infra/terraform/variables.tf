@@ -21,3 +21,15 @@ variable "create_oidc_provider" {
   type        = bool
   default     = true
 }
+
+variable "budget_alert_email" {
+  description = "Email to notify on spend alerts. Leave empty to skip the budget. Never commit a real email."
+  type        = string
+  default     = ""
+}
+
+variable "monthly_budget_usd" {
+  description = "Monthly spend threshold (USD) for the budget alarm."
+  type        = number
+  default     = 5
+}

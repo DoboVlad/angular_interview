@@ -23,6 +23,11 @@ output "deploy_role_arn" {
   value       = aws_iam_role.deploy.arn
 }
 
+output "budget_alarm" {
+  description = "Whether the monthly billing alarm is active."
+  value = length(aws_budgets_budget.monthly) > 0 ? "enabled: alerts ${var.budget_alert_email} at 80%/100% of $${var.monthly_budget_usd}/mo" : "disabled (set budget_alert_email to enable)"
+}
+
 # One-glance summary of everything to paste into GitHub repo settings.
 output "github_actions_setup" {
   description = "Copy these into Settings -> Secrets and variables -> Actions."
