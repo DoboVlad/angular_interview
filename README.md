@@ -155,6 +155,49 @@ is set.
 4. Attach an **ACM certificate** (in `us-east-1`) for your domain and add the
    CNAME; point Route 53 / DNS at the distribution.
 
+### 6. Automated deployment (GitHub Actions)
+
+[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) builds + tests on
+every push/PR and **deploys to S3 on push to `main`**. It authenticates to AWS
+with **OIDC** (a short-lived assumed role — no long-lived keys in the repo).
+
+**One-time AWS setup:**
+
+1. Add GitHub as an OIDC identity provider in IAM:
+   - Provider URL: `https://token.actions.githubusercontent.com`
+   - Audience: `sts.amazonaws.com`
+2. Create an IAM role with a trust policy scoped to this repo, e.g.:
+   ```json
+   {
+     "Effect": "Allow",
+     "Principal": { "Federated": "arn:aws:iam::<ACCOUNT_ID>:oidc-provider/token.actions.githubusercontent.com" },
+     "Action": "sts:AssumeRoleWithWebIdentity",
+     "Condition": {
+       "StringEquals": { "token.actions.githubusercontent.com:aud": "sts.amazonaws.com" },
+       "StringLike": { "token.actions.githubusercontent.com:sub": "repo:DoboVlad/angular_interview:*" }
+     }
+   }
+   ```
+3. Give the role permissions for `s3:PutObject`, `s3:DeleteObject`, `s3:ListBucket`
+   on the bucket, plus `cloudfront:CreateInvalidation` if you use CloudFront.
+
+**Configure the repo** (Settings → Secrets and variables → Actions):
+
+| Type     | Name                  | Example |
+|----------|-----------------------|---------|
+| Secret   | `AWS_ROLE_ARN`        | `arn:aws:iam::123456789012:role/github-deploy` |
+| Variable | `AWS_REGION`          | `eu-west-1` |
+| Variable | `S3_BUCKET`           | `your-bucket-name` |
+| Variable | `CLOUDFRONT_DIST_ID`  | `E123ABC` (optional — leave unset to skip invalidation) |
+
+That's it: push to `main` and the site redeploys. The `production`
+[environment](https://docs.github.com/actions/deployment/targeting-different-environments)
+in the workflow lets you add a required-reviewer gate if you want manual approval
+before deploys.
+
+> Prefer access keys over OIDC? Swap the `configure-aws-credentials` step inputs
+> for `aws-access-key-id`/`aws-secret-access-key` secrets — but OIDC is safer.
+
 ---
 
 ## Quality gates
