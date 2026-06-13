@@ -1,0 +1,81 @@
+@if (result(); as r) {
+  <div class="be-container results">
+    <!-- Score hero -->
+    <section class="be-card results__hero be-animate-rise">
+      <div class="results__hero-main">
+        <p class="results__eyebrow">Test complete</p>
+        <div class="results__grade-row">
+          <span class="results__grade results__grade--{{ r.grade }}">
+            {{ r.grade }}
+          </span>
+          <div>
+            <span class="results__pct">{{ r.scorePct }}%</span>
+            <p class="be-muted results__tally">
+              {{ r.correct }} correct · {{ r.wrong }} wrong ·
+              {{ r.skipped }} skipped
+            </p>
+          </div>
+        </div>
+      </div>
+      <be-score-donut
+        [correct]="r.correct"
+        [wrong]="r.wrong"
+        [skipped]="r.skipped"
+      />
+    </section>
+
+    <!-- Actions -->
+    <div class="results__actions">
+      @if (hasMissed()) {
+        <button type="button" class="be-btn be-btn-primary" (click)="retryMissed()">
+          <lucide-icon [img]="RotateCcw" [size]="18" />
+          Retry missed ({{ missed().length }})
+        </button>
+      }
+      <a routerLink="/" class="be-btn be-btn-ghost">
+        <lucide-icon [img]="Plus" [size]="18" />
+        New test
+      </a>
+      <button type="button" class="be-btn be-btn-ghost" (click)="share()">
+        <lucide-icon [img]="Share2" [size]="18" />
+        Share
+      </button>
+    </div>
+
+    <!-- Breakdown -->
+    <section class="be-card results__section">
+      <h2 class="results__h">By topic</h2>
+      <be-breakdown-table [rows]="r.breakdown" />
+    </section>
+
+    <!-- Missed -->
+    <section class="be-card results__section">
+      <h2 class="results__h">
+        @if (hasMissed()) {
+          Review your misses
+        } @else {
+          Nothing missed — flawless run 🎯
+        }
+      </h2>
+      @if (hasMissed()) {
+        <be-missed-accordion [entries]="missed()" />
+      } @else {
+        <p class="be-muted">
+          Every question correct. Try a larger or harder test to keep the edge.
+        </p>
+      }
+    </section>
+  </div>
+} @else {
+  <div class="be-container results__missing">
+    <h1>Result not found</h1>
+    <p class="be-muted">
+      This result isn't in your history — it may have been cleared or taken on
+      another device.
+    </p>
+    <a routerLink="/" class="be-btn be-btn-primary">
+      <lucide-icon [img]="Home" [size]="18" />
+      Back to dashboard
+    </a>
+  </div>
+}

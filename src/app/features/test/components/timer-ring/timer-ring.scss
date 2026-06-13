@@ -1,0 +1,36 @@
+.ring {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+}
+
+.ring svg {
+  position: absolute;
+  inset: 0;
+}
+
+.ring__track {
+  stroke: rgba(134, 134, 172, 0.25);
+}
+
+.ring__progress {
+  stroke: var(--be-purple);
+  transition: stroke-dashoffset 1s linear, stroke var(--be-dur) var(--be-ease);
+}
+
+.ring__progress--warn {
+  stroke: var(--be-error);
+}
+
+.ring__label {
+  font-family: var(--be-font-mono);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--be-text);
+}
+
+.ring__label--warn {
+  color: var(--be-error);
+}

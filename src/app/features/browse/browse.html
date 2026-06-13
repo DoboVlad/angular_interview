@@ -1,0 +1,151 @@
+<div class="be-container browse">
+  <header class="browse__head">
+    <h1>Question browser</h1>
+    <p class="be-muted">
+      All {{ bank.value().length }} questions — filter, search, and read
+      the full explanation for any of them.
+    </p>
+  </header>
+
+  <div class="browse__layout">
+    <!-- Filter sidebar -->
+    <aside class="browse__sidebar" aria-label="Filters">
+      <div class="filter-search">
+        <lucide-icon [img]="Search" [size]="16" class="filter-search__icon" />
+        <input
+          type="search"
+          class="filter-search__input"
+          placeholder="Search questions…"
+          [value]="filters.controls.search.value()"
+          (input)="filters.controls.search.set($any($event.target).value)"
+          aria-label="Search questions"
+        />
+      </div>
+
+      <fieldset class="filter-group">
+        <legend>Category</legend>
+        @for (cat of categories; track cat) {
+          <label class="check">
+            <input
+              type="checkbox"
+              [checked]="isCategoryOn(cat)"
+              (change)="toggleCategory(cat)"
+            />
+            <span>{{ cat }}</span>
+          </label>
+        }
+      </fieldset>
+
+      <fieldset class="filter-group">
+        <legend>Difficulty</legend>
+        <div class="filter-diffs">
+          @for (diff of difficulties; track diff) {
+            <button
+              type="button"
+              class="diff-chip"
+              [class.diff-chip--on]="isDifficultyOn(diff)"
+              [attr.aria-pressed]="isDifficultyOn(diff)"
+              (click)="toggleDifficulty(diff)"
+            >
+              {{ diff }}
+            </button>
+          }
+        </div>
+      </fieldset>
+
+      <fieldset class="filter-group">
+        <legend>Subcategory</legend>
+        <div class="filter-subs">
+          @for (sub of allSubcategories(); track sub) {
+            <label class="check">
+              <input
+                type="checkbox"
+                [checked]="isSubcategoryOn(sub)"
+                (change)="toggleSubcategory(sub)"
+              />
+              <span>{{ sub }}</span>
+            </label>
+          }
+        </div>
+      </fieldset>
+
+      <button type="button" class="be-btn be-btn-ghost browse__clear" (click)="clearFilters()">
+        Clear filters
+      </button>
+    </aside>
+
+    <!-- Virtualised list -->
+    <section class="browse__results" aria-label="Question list">
+      <p class="browse__count be-muted">{{ filtered().length }} questions</p>
+      @if (filtered().length === 0) {
+        <p class="browse__empty be-muted">No questions match those filters.</p>
+      } @else {
+        <cdk-virtual-scroll-viewport itemSize="88" class="browse__viewport">
+          <button
+            *cdkVirtualFor="let q of filtered()"
+            type="button"
+            class="qrow"
+            [class.qrow--active]="selected()?.id === q.id"
+            (click)="select(q)"
+          >
+            <span class="qrow__top">
+              <span class="be-badge">{{ q.category }}</span>
+              <span class="qrow__sub">{{ q.subcategory }}</span>
+              <be-difficulty-dots [level]="q.difficulty" />
+            </span>
+            <span class="qrow__text">{{ q.question }}</span>
+          </button>
+        </cdk-virtual-scroll-viewport>
+      }
+    </section>
+  </div>
+</div>
+
+<!-- Slide-in detail panel -->
+@if (selected(); as q) {
+  <div class="detail-backdrop" (click)="closeDetail()" role="presentation"></div>
+  <aside class="detail" role="dialog" aria-modal="true" aria-label="Question detail">
+    <header class="detail__head">
+      <div class="detail__meta">
+        <span class="be-badge">{{ q.category }} · {{ q.subcategory }}</span>
+        <be-difficulty-dots [level]="q.difficulty" [showLabel]="true" />
+      </div>
+      <button type="button" class="detail__close" (click)="closeDetail()" aria-label="Close">
+        <lucide-icon [img]="X" [size]="18" />
+      </button>
+    </header>
+
+    <div class="detail__body">
+      <be-code-block [markdown]="q.question" />
+
+      @if (q.options?.length) {
+        <ul class="detail__options">
+          @for (opt of q.options; track opt; let i = $index) {
+            <li [class.detail__option--correct]="q.correctAnswer === ['A','B','C','D'][i]">
+              {{ ['A','B','C','D'][i] }}. {{ opt }}
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="detail__tf">
+          Correct answer: <strong>{{ q.correctAnswer ? 'True' : 'False' }}</strong>
+        </p>
+      }
+
+      <div class="detail__section">
+        <h3>Explanation</h3>
+        <be-code-block [markdown]="q.explanation" />
+      </div>
+
+      <div class="be-callout detail__insight">
+        <strong>Senior insight.</strong> {{ q.seniorInsight }}
+      </div>
+
+      <div class="detail__tags">
+        @for (tag of q.tags; track tag) {
+          <span class="tag">#{{ tag }}</span>
+        }
+      </div>
+    </div>
+  </aside>
+}

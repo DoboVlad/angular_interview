@@ -1,0 +1,26 @@
+.dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--be-dot-empty);
+  transition: background-color var(--be-dur-fast) var(--be-ease);
+}
+
+.dot--on {
+  background: var(--be-dot-filled);
+}
+
+.dots__label {
+  margin-left: 6px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--be-text-secondary);
+}

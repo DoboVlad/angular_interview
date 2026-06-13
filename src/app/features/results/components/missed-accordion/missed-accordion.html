@@ -1,0 +1,42 @@
+<ul class="acc">
+  @for (entry of entries(); track entry.question.id) {
+    <li class="acc__item" [class.acc__item--open]="isOpen(entry.question.id)">
+      <button
+        type="button"
+        class="acc__trigger"
+        [attr.aria-expanded]="isOpen(entry.question.id)"
+        (click)="toggle(entry.question.id)"
+      >
+        <span class="acc__meta">
+          <span class="be-badge">{{ entry.question.subcategory }}</span>
+          <be-difficulty-dots [level]="entry.question.difficulty" />
+        </span>
+        <span class="acc__q">{{ entry.question.question }}</span>
+        <span class="acc__chevron" aria-hidden="true">
+          <lucide-icon [img]="ChevronDown" [size]="18" />
+        </span>
+      </button>
+
+      @if (isOpen(entry.question.id)) {
+        <div class="acc__panel be-animate-fade">
+          <div class="acc__answers">
+            <p class="acc__answer acc__answer--bad">
+              <strong>You:</strong>
+              {{ describe(entry.question, entry.given) }}
+            </p>
+            <p class="acc__answer acc__answer--ok">
+              <strong>Correct:</strong>
+              {{ describe(entry.question, entry.question.correctAnswer) }}
+            </p>
+          </div>
+          <div class="acc__explain">
+            <be-code-block [markdown]="entry.question.explanation" />
+          </div>
+          <div class="be-callout acc__insight">
+            <strong>Senior insight.</strong> {{ entry.question.seniorInsight }}
+          </div>
+        </div>
+      }
+    </li>
+  }
+</ul>

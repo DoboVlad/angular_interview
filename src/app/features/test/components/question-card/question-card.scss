@@ -1,0 +1,39 @@
+.qcard {
+  display: flex;
+  flex-direction: column;
+}
+
+.qcard__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--be-space-3);
+  margin-bottom: var(--be-space-4);
+}
+
+.qcard__crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--be-space-2);
+  font-size: 0.85rem;
+}
+
+.qcard__sep {
+  color: var(--be-text-secondary);
+}
+
+.qcard__sub {
+  color: var(--be-text-secondary);
+  text-transform: capitalize;
+}
+
+.qcard__stem {
+  font-size: 1.1rem;
+  margin-bottom: var(--be-space-5);
+}
+
+.qcard__options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--be-space-3);
+}

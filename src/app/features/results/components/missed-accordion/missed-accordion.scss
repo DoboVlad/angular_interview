@@ -1,0 +1,79 @@
+.acc {
+  display: flex;
+  flex-direction: column;
+  gap: var(--be-space-2);
+}
+
+.acc__item {
+  border: 1px solid var(--be-border);
+  border-radius: var(--be-radius-sm);
+  overflow: hidden;
+}
+
+.acc__trigger {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--be-space-3);
+  width: 100%;
+  text-align: left;
+  padding: var(--be-space-3) var(--be-space-4);
+  color: var(--be-text);
+
+  &:hover {
+    background: rgba(134, 134, 172, 0.07);
+  }
+}
+
+.acc__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.acc__q {
+  font-size: 0.95rem;
+  /* Clamp the markdown-ish stem to a single readable line in the trigger. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.acc__chevron {
+  display: grid;
+  place-items: center;
+  color: var(--be-text-secondary);
+  transition: transform var(--be-dur) var(--be-ease);
+}
+
+.acc__item--open .acc__chevron {
+  transform: rotate(180deg);
+}
+
+.acc__panel {
+  padding: 0 var(--be-space-4) var(--be-space-4);
+  border-top: 1px solid var(--be-border);
+}
+
+.acc__answers {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: var(--be-space-3) 0;
+  font-size: 0.92rem;
+}
+
+.acc__answer--bad strong {
+  color: var(--be-error);
+}
+
+.acc__answer--ok strong {
+  color: var(--be-success);
+}
+
+.acc__insight {
+  margin-top: var(--be-space-3);
+  font-size: 0.92rem;
+}

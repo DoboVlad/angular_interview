@@ -1,0 +1,128 @@
+<div class="be-container settings">
+  <header class="settings__head">
+    <h1>Settings</h1>
+    <p class="be-muted">Everything here is stored locally in your browser.</p>
+  </header>
+
+  <!-- API key -->
+  <section class="be-card settings__section" aria-labelledby="key-h">
+    <h2 id="key-h">Anthropic API key</h2>
+    <p class="be-muted settings__desc">
+      Used for the “Go deeper with AI” explanations via <code>claude-fable-5</code>.
+    </p>
+
+    <div class="key-row">
+      <div class="key-input">
+        <input
+          [type]="showKey() ? 'text' : 'password'"
+          class="key-input__field"
+          placeholder="sk-ant-…"
+          autocomplete="off"
+          spellcheck="false"
+          [value]="apiKey.value()"
+          (input)="apiKey.set($any($event.target).value)"
+          aria-label="Anthropic API key"
+        />
+        <button
+          type="button"
+          class="key-input__toggle"
+          (click)="showKey.set(!showKey())"
+          [attr.aria-label]="showKey() ? 'Hide key' : 'Show key'"
+        >
+          <lucide-icon [img]="showKey() ? EyeOff : Eye" [size]="16" />
+        </button>
+      </div>
+      <button
+        type="button"
+        class="be-btn be-btn-primary"
+        [disabled]="!apiKey.value().trim()"
+        (click)="saveKey()"
+      >
+        <lucide-icon [img]="Check" [size]="16" />
+        Save
+      </button>
+    </div>
+
+    <div class="key-status">
+      @if (hasKey()) {
+        <span class="key-status__on">● A key is stored on this device.</span>
+        <button type="button" class="link-btn" (click)="clearKey()">Remove key</button>
+      } @else {
+        <span class="be-muted">No key stored yet.</span>
+      }
+    </div>
+
+    <div class="be-callout settings__disclaimer">
+      <strong>Stored client-side.</strong> Your key is kept in this browser’s
+      <code>localStorage</code> and sent directly to Anthropic from your browser.
+      It never touches a server of ours. Don’t use a shared or production key.
+    </div>
+  </section>
+
+  <!-- Appearance -->
+  <section class="be-card settings__section" aria-labelledby="theme-h">
+    <h2 id="theme-h">Appearance</h2>
+    <p class="be-muted settings__desc">Choose a theme, or follow your system.</p>
+    <div class="segmented" role="radiogroup" aria-label="Theme">
+      @for (option of themeOptions; track option) {
+        <button
+          type="button"
+          role="radio"
+          class="seg"
+          [class.seg--on]="theme.preference() === option"
+          [attr.aria-checked]="theme.preference() === option"
+          (click)="setTheme(option)"
+        >
+          {{ option }}
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- Default timer -->
+  <section class="be-card settings__section" aria-labelledby="timer-h">
+    <h2 id="timer-h">Default timer</h2>
+    <p class="be-muted settings__desc">
+      Pre-selected on the dashboard when you start a new test.
+    </p>
+    <div class="segmented" role="radiogroup" aria-label="Default timer">
+      @for (timer of timerOptions; track timer ?? -1) {
+        <button
+          type="button"
+          role="radio"
+          class="seg"
+          [class.seg--on]="timerDefault.value() === timer"
+          [attr.aria-checked]="timerDefault.value() === timer"
+          (click)="setTimerDefault(timer)"
+        >
+          {{ timerLabel(timer) }}
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- Danger zone -->
+  <section class="be-card settings__section settings__danger" aria-labelledby="danger-h">
+    <h2 id="danger-h">Reset</h2>
+    <p class="be-muted settings__desc">
+      Clears your test history, stored API key, and all preferences. This can’t
+      be undone.
+    </p>
+    @if (!showResetConfirm()) {
+      <button type="button" class="be-btn be-btn-danger" (click)="showResetConfirm.set(true)">
+        <lucide-icon [img]="Trash2" [size]="16" />
+        Reset all data
+      </button>
+    } @else {
+      <div class="reset-confirm">
+        <span>Really clear everything?</span>
+        <button type="button" class="be-btn be-btn-ghost" (click)="showResetConfirm.set(false)">
+          Cancel
+        </button>
+        <button type="button" class="be-btn be-btn-danger" (click)="resetAll()">
+          Yes, reset
+        </button>
+      </div>
+    }
+  </section>
+</div>

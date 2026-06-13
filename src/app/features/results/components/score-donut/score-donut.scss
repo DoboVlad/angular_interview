@@ -1,0 +1,40 @@
+.donut {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 160px;
+  height: 160px;
+}
+
+.donut svg {
+  position: absolute;
+  inset: 0;
+}
+
+.donut__track {
+  stroke: rgba(134, 134, 172, 0.18);
+}
+
+.donut svg circle[stroke] {
+  transition: stroke-dasharray var(--be-dur-slow) var(--be-ease);
+}
+
+.donut__center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.1;
+}
+
+.donut__pct {
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.donut__sub {
+  font-size: 0.78rem;
+  color: var(--be-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}

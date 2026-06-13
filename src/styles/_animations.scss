@@ -1,0 +1,89 @@
+// Shared keyframes + reusable animation utilities.
+
+@keyframes be-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes be-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes be-slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes be-shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+@keyframes be-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.be-animate-rise {
+  animation: be-rise-in var(--be-dur) var(--be-ease) both;
+}
+
+.be-animate-fade {
+  animation: be-fade-in var(--be-dur) var(--be-ease) both;
+}
+
+// Skeleton loader — used while the AI explanation streams.
+.be-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(134, 134, 172, 0.12) 25%,
+    rgba(134, 134, 172, 0.24) 37%,
+    rgba(134, 134, 172, 0.12) 63%
+  );
+  background-size: 800px 100%;
+  animation: be-shimmer 1.4s linear infinite;
+  border-radius: 6px;
+}
+
+// ---------------------------------------------------------------------------
+// View Transitions API — route-level cross-fade + slight rise.
+// Enabled in the router via withViewTransitions().
+// ---------------------------------------------------------------------------
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 260ms;
+  animation-timing-function: var(--be-ease);
+}
+
+::view-transition-old(root) {
+  animation-name: be-fade-in;
+  animation-direction: reverse;
+}
+
+::view-transition-new(root) {
+  animation-name: be-rise-in;
+}

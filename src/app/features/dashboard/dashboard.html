@@ -1,0 +1,156 @@
+<div class="be-container dashboard">
+  <section class="hero be-animate-rise">
+    <p class="hero__eyebrow">Senior Angular interview prep</p>
+    <h1 class="hero__title">
+      Practice like it's the <span class="accent">real interview</span>.
+    </h1>
+    <p class="hero__lede be-muted">
+      110 reasoning-first questions across Angular 22, signals, zoneless change
+      detection, RxJS interop, TypeScript and the browser platform — graded,
+      adaptive, and explained.
+    </p>
+  </section>
+
+  <div class="dashboard__grid">
+    <!-- Start test config form -->
+    <section class="be-card start-card" aria-labelledby="start-h">
+      <header class="start-card__head">
+        <h2 id="start-h">Start a test</h2>
+        @if (!bankReady()) {
+          <span class="be-badge">Loading bank…</span>
+        }
+      </header>
+
+      <form (submit)="$event.preventDefault(); start()" class="start-form">
+        <fieldset class="field">
+          <legend>Questions</legend>
+          <div class="segmented" role="radiogroup" aria-label="Test size">
+            @for (size of sizes; track size) {
+              <button
+                type="button"
+                role="radio"
+                [attr.aria-checked]="form.controls.size.value() === size"
+                class="seg"
+                [class.seg--on]="form.controls.size.value() === size"
+                (click)="form.controls.size.set(size)"
+              >
+                {{ size }}
+              </button>
+            }
+          </div>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend>Focus</legend>
+          <div class="segmented segmented--stack" role="radiogroup" aria-label="Category filter">
+            @for (filter of filters; track filter) {
+              <button
+                type="button"
+                role="radio"
+                [attr.aria-checked]="form.controls.filter.value() === filter"
+                class="seg seg--wide"
+                [class.seg--on]="form.controls.filter.value() === filter"
+                (click)="form.controls.filter.set(filter)"
+              >
+                {{ filterLabels[filter] }}
+              </button>
+            }
+          </div>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend>Per-question timer</legend>
+          <div class="segmented" role="radiogroup" aria-label="Timer">
+            @for (timer of timers; track timer ?? -1) {
+              <button
+                type="button"
+                role="radio"
+                [attr.aria-checked]="form.controls.timer.value() === timer"
+                class="seg"
+                [class.seg--on]="form.controls.timer.value() === timer"
+                (click)="form.controls.timer.set(timer)"
+              >
+                {{ timerLabel(timer) }}
+              </button>
+            }
+          </div>
+        </fieldset>
+
+        <button
+          type="submit"
+          class="be-btn be-btn-primary start-btn"
+          [disabled]="!canStart()"
+        >
+          <lucide-icon [img]="Play" [size]="18" />
+          Begin {{ form.controls.size.value() }} questions
+        </button>
+      </form>
+    </section>
+
+    <!-- Stats + history -->
+    <div class="dashboard__side">
+      @defer (on idle) {
+        <section class="be-card stats" aria-label="Your statistics">
+          <div class="stat">
+            <span class="stat__icon"><lucide-icon [img]="ClipboardList" [size]="18" /></span>
+            <span class="stat__value">{{ stats().testsTaken }}</span>
+            <span class="stat__label">Tests taken</span>
+          </div>
+          <div class="stat">
+            <span class="stat__icon"><lucide-icon [img]="Target" [size]="18" /></span>
+            <span class="stat__value">{{ stats().avgScorePct }}%</span>
+            <span class="stat__label">Avg score</span>
+          </div>
+          <div class="stat">
+            <span class="stat__icon"><lucide-icon [img]="Flame" [size]="18" /></span>
+            <span class="stat__value">{{ stats().bestStreak }}</span>
+            <span class="stat__label">Best streak</span>
+          </div>
+          <div class="stat stat--wide">
+            <span class="stat__icon"><lucide-icon [img]="TrendingUp" [size]="18" /></span>
+            <span class="stat__value stat__value--sm">
+              {{ stats().weakestSubcategory ?? '—' }}
+            </span>
+            <span class="stat__label">Weakest area</span>
+          </div>
+        </section>
+      } @placeholder {
+        <section class="be-card stats stats--skeleton" aria-hidden="true">
+          <div class="be-skeleton" style="height: 84px"></div>
+        </section>
+      }
+
+      <section class="be-card history" aria-labelledby="history-h">
+        <h2 id="history-h" class="history__title">Recent tests</h2>
+        @if (recent().length === 0) {
+          <p class="be-muted history__empty">
+            No tests yet — your results will appear here.
+          </p>
+        } @else {
+          <ul class="history__list">
+            @for (result of recent(); track result.id) {
+              <li class="history__item">
+                <a [routerLink]="['/results', result.id]" class="history__link">
+                  <span class="history__grade history__grade--{{ result.grade }}">
+                    {{ result.grade }}
+                  </span>
+                  <span class="history__meta">
+                    <strong>{{ result.scorePct }}%</strong>
+                    <span class="be-muted">
+                      {{ result.correct }}/{{ result.total }} ·
+                      {{ result.completedAt | relativeTime }}
+                    </span>
+                  </span>
+                  <span class="history__bar">
+                    <be-progress-bar [value]="result.scorePct" label="Score" />
+                  </span>
+                  <lucide-icon [img]="ArrowRight" [size]="16" />
+                </a>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    </div>
+  </div>
+</div>

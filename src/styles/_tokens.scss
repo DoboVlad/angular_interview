@@ -1,0 +1,91 @@
+// =============================================================================
+// Blue Eclipse — design tokens
+// The entire UI is built on this palette. No other primary colors.
+// =============================================================================
+
+:root,
+[data-theme='light'] {
+  // Core palette
+  --be-navy: #272757; // primary surfaces, sidebar, headers
+  --be-lavender: #8686ac; // secondary text, borders, muted UI chrome
+  --be-purple: #505081; // interactive accents, hover states, badges
+  --be-midnight: #0f0e47; // darkest backgrounds, code blocks, footer
+  --be-white: #ffffff;
+
+  // Light-mode semantic surfaces
+  --be-surface: #f4f3fa; // page background
+  --be-card: #ffffff; // card background
+  --be-border: rgba(134, 134, 172, 0.25); // 1px borders
+  --be-border-strong: rgba(134, 134, 172, 0.45);
+
+  // Text
+  --be-text: #1d1d3b; // primary text on light
+  --be-text-secondary: #5a5a82; // secondary text on light
+  --be-text-on-accent: #ffffff;
+
+  // Status
+  --be-success: #22c55e;
+  --be-error: #ef4444;
+  --be-warning: #f59e0b;
+
+  // Difficulty dots
+  --be-dot-filled: #505081;
+  --be-dot-empty: rgba(134, 134, 172, 0.3);
+
+  // Progress bar gradient stops (used as a 2-stop fill)
+  --be-progress-from: #8686ac;
+  --be-progress-to: #505081;
+
+  // Radii & spacing scale
+  --be-radius-sm: 8px;
+  --be-radius: 12px;
+  --be-radius-lg: 16px;
+  --be-space-1: 4px;
+  --be-space-2: 8px;
+  --be-space-3: 12px;
+  --be-space-4: 16px;
+  --be-space-5: 24px;
+  --be-space-6: 32px;
+  --be-space-7: 48px;
+
+  // Typography
+  --be-font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --be-font-mono: 'JetBrains Mono', 'SFMono-Regular', 'Consolas', monospace;
+
+  // Motion
+  --be-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --be-dur-fast: 120ms;
+  --be-dur: 200ms;
+  --be-dur-slow: 320ms;
+
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --be-surface: #0f0e47;
+  --be-card: #1a1a5e; // slightly lighter than midnight
+  --be-navy: #272757; // kept as border/divider in dark
+  --be-midnight: #0b0a33;
+
+  --be-border: rgba(134, 134, 172, 0.22);
+  --be-border-strong: rgba(134, 134, 172, 0.4);
+
+  --be-text: #ffffff; // primary text on dark
+  --be-text-secondary: #8686ac; // secondary text on dark
+  --be-text-on-accent: #ffffff;
+
+  --be-dot-empty: rgba(134, 134, 172, 0.25);
+
+  color-scheme: dark;
+}
+
+// Respect OS preference when the user has not made a manual choice.
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']):not([data-theme='dark']) {
+    --be-surface: #0f0e47;
+    --be-card: #1a1a5e;
+    --be-text: #ffffff;
+    --be-text-secondary: #8686ac;
+    color-scheme: dark;
+  }
+}

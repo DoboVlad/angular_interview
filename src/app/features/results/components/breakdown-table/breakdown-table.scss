@@ -1,0 +1,50 @@
+.table-wrap {
+  overflow-x: auto;
+}
+
+.breakdown {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.breakdown th,
+.breakdown td {
+  text-align: left;
+  padding: var(--be-space-3);
+  border-bottom: 1px solid var(--be-border);
+  vertical-align: middle;
+}
+
+.breakdown thead th {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--be-text-secondary);
+}
+
+.breakdown__topic {
+  text-transform: capitalize;
+  font-weight: 500;
+}
+
+.breakdown__score {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.breakdown__score--low {
+  color: var(--be-error);
+}
+
+.breakdown__avg {
+  margin-left: 8px;
+  font-size: 0.82rem;
+  color: var(--be-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.breakdown__suggestion {
+  color: var(--be-text-secondary);
+}

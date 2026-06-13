@@ -1,0 +1,68 @@
+<div class="ai">
+  @if (!hasKey() && phase() === 'idle') {
+    <!-- No key configured -->
+    <div class="ai__cta">
+      <lucide-icon [img]="KeyRound" [size]="18" />
+      <span>Add an Anthropic API key to unlock AI explanations.</span>
+      <a routerLink="/settings" class="be-btn be-btn-ghost ai__cta-btn">
+        Go to settings
+      </a>
+    </div>
+  } @else {
+    @if (phase() === 'idle') {
+      <button type="button" class="be-btn be-btn-ghost ai__trigger" (click)="run()">
+        <lucide-icon [img]="Sparkles" [size]="18" />
+        Go deeper with AI ↗
+      </button>
+    }
+
+    @if (isStreaming() || phase() === 'done' || phase() === 'error') {
+      <div class="ai__panel">
+        <header class="ai__head">
+          <span class="ai__title">
+            <lucide-icon [img]="Sparkles" [size]="16" />
+            Principal engineer explains
+          </span>
+          @if (isStreaming()) {
+            <button type="button" class="be-btn be-btn-ghost ai__stop" (click)="stop()">
+              <lucide-icon [img]="Square" [size]="14" />
+              Stop
+            </button>
+          } @else if (phase() === 'done') {
+            <button type="button" class="be-btn be-btn-ghost ai__stop" (click)="run()">
+              <lucide-icon [img]="RotateCw" [size]="14" />
+              Regenerate
+            </button>
+          }
+        </header>
+
+        @if (hasText()) {
+          <be-code-block [markdown]="text()" />
+        }
+
+        @if (isStreaming() && !hasText()) {
+          <div class="ai__skeleton" aria-hidden="true">
+            <div class="be-skeleton" style="height: 14px; width: 90%"></div>
+            <div class="be-skeleton" style="height: 14px; width: 80%"></div>
+            <div class="be-skeleton" style="height: 14px; width: 60%"></div>
+          </div>
+        }
+
+        @if (isStreaming() && hasText()) {
+          <span class="ai__cursor" aria-hidden="true"></span>
+        }
+
+        @if (phase() === 'error') {
+          <div class="ai__error" role="alert">
+            <lucide-icon [img]="TriangleAlert" [size]="16" />
+            <span>{{ errorMessage() }}</span>
+            <button type="button" class="be-btn be-btn-ghost" (click)="run()">
+              <lucide-icon [img]="RotateCw" [size]="14" />
+              Retry
+            </button>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

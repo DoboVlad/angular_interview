@@ -1,0 +1,104 @@
+@if (current(); as q) {
+  <div class="be-container test">
+    <!-- Sticky progress + timer bar -->
+    <div class="test__bar">
+      <div class="test__bar-inner">
+        <button
+          type="button"
+          class="be-btn be-btn-ghost test__quit"
+          (click)="showQuit.set(true)"
+        >
+          <lucide-icon [img]="X" [size]="16" />
+          Quit
+        </button>
+
+        <div class="test__progress">
+          <span class="test__count">
+            Question <strong>{{ currentIndex() + 1 }}</strong> of {{ total() }}
+          </span>
+          <be-progress-bar [value]="progressPct()" label="Test progress" />
+        </div>
+
+        @if (hasTimer()) {
+          <be-timer-ring [total]="config()!.timer!" [remaining]="remaining()" />
+        } @else {
+          <span class="test__notimer be-muted">No timer</span>
+        }
+      </div>
+    </div>
+
+    <!-- Question -->
+    <section class="be-card test__card">
+      <be-question-card
+        [question]="q"
+        [selected]="selected()"
+        [answered]="answered()"
+        (pick)="pick($event)"
+      />
+
+      <div class="test__actions">
+        @if (!isAnswered()) {
+          <button
+            type="button"
+            class="be-btn be-btn-primary"
+            [disabled]="!canConfirm()"
+            (click)="confirm()"
+          >
+            <lucide-icon [img]="Check" [size]="18" />
+            Confirm answer
+            <span class="kbd-hint"><kbd>Enter</kbd></span>
+          </button>
+        } @else {
+          <button type="button" class="be-btn be-btn-primary" (click)="advance()">
+            @if (isLast()) {
+              See results
+            } @else {
+              Next question
+            }
+            <lucide-icon [img]="ArrowRight" [size]="18" />
+            <span class="kbd-hint"><kbd>→</kbd></span>
+          </button>
+        }
+      </div>
+    </section>
+
+    <p class="test__hint be-muted">
+      Tip: press <kbd>1</kbd>–<kbd>4</kbd> to choose, <kbd>Enter</kbd> to confirm,
+      <kbd>→</kbd> for the next question.
+    </p>
+  </div>
+
+  <!-- Quit confirmation modal -->
+  @if (showQuit()) {
+    <div
+      class="modal-backdrop"
+      (click)="showQuit.set(false)"
+      role="presentation"
+    >
+      <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="quit-title"
+        (click)="$event.stopPropagation()"
+      >
+        <h2 id="quit-title">Quit this test?</h2>
+        <p class="be-muted">
+          Your progress on this test will be discarded and not saved to history.
+        </p>
+        <div class="modal__actions">
+          <button
+            type="button"
+            class="be-btn be-btn-ghost"
+            (click)="showQuit.set(false)"
+          >
+            Keep going
+          </button>
+          <button type="button" class="be-btn be-btn-danger" (click)="quit()">
+            Quit test
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+}
